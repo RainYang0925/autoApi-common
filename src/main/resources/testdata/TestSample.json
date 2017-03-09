@@ -1,0 +1,55 @@
+{
+  "description": "用户进行一次操作 /api/v1/resources/{userType}",
+  "sqlBeforeClass": [
+    "select * from mydata2.T_User order by UserId  limit 1;",
+    "select * from  mydata2.T_Card limit 1;"
+  ],
+  "sqlAfterClass": [
+    "delete from mydata1.T_User where UserId=60;",
+    "delete from mydata2.T_S_User where UserId=60;"
+  ],
+  "sqlBeforeMethod": [
+    "insert into mydata2.T_User (Id,State, CreateTime, LastModifyTime) values(60,0, NOW(), NOW());"
+  ],
+  "sqlAfterMethod": [
+  ],
+  "apis": [
+    {
+      "desc": "测试接口模板",
+      "url": "http://localhost:8080/api/v1/resources/{userType}?platform={platform}",
+      "method": "post",
+      "headers": {
+        "Content-Type": "application/json",
+        "Accept": "*/*",
+        "X-Tracking-ID": "X-Tracking-ID",
+        "userId": "<%user_all_over.UserId%>",
+        "Authorization": "encrypt <%user_all_over.Token%>"
+      },
+      "params": {
+      },
+      "isNeedException": true,
+      "EnumURL": {
+        "userType": [
+          "FreshUser",
+          "NewUser",
+          "OldUser",
+          "LosingUser",
+          "All"
+        ],
+        "platform": [
+          "baidu",
+          "sougou",
+          "all"
+        ]
+      },
+      "EnumHeaders": {
+        "Authorization": [
+          "encrypt <%user_all_over.Token%>",
+          "<%user_all_over.Token%>",
+          "encrypt <%user_all_over.Token%>123"
+        ]
+      },
+      "EnumParams": {}
+    }
+  ]
+}
