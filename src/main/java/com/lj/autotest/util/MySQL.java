@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 /**
  * Created by lijing on 16/5/5.
- * Description:
+ * Description: MySQL初始化连接，及简单封装的增删改查
  */
 public class MySQL {
     String db;

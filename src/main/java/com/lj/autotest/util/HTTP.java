@@ -36,12 +36,13 @@ public class HTTP {
 
     /**
      * HTTP GET 请求
-     * @param httpClient  : 发起请求的HttpClient,为空时自动创建
-     * @param closeClient : 请求结束后是否关闭标志
-     * @param baseUrl     :
+     *
+     * @param httpClient    : 发起请求的HttpClient,为空时自动创建
+     * @param closeClient   : 请求结束后是否关闭标志
+     * @param baseUrl       :
      * @param queryStrings:
-     * @param headers     : HTTP Headers
-     * @return            :返回自定义Response
+     * @param headers       : HTTP Headers
+     * @return :返回自定义Response
      * @throws IOException
      */
     public static Response get(CloseableHttpClient httpClient,
@@ -119,13 +120,14 @@ public class HTTP {
 
     /**
      * HTTP POST 请求
+     *
      * @param httpClient   :发起请求的HttpClient, 为空时自动创建
      * @param closeClient  :请求是否关闭标志
      * @param baseUrl      :请求Url
      * @param queryStrings :请求Url参数
      * @param headers      :请求头信息
      * @param params       :POST data参数
-     * @return             :返回自定义Response
+     * @return :返回自定义Response
      * @throws IOException
      */
     public static Response post(CloseableHttpClient httpClient,
@@ -165,8 +167,7 @@ public class HTTP {
             entity.setContentEncoding("UTF-8");
             entity.setContentType("application/json");
             httpPost.setEntity(entity);
-        }
-        else{
+        } else {
             // 处理表单Form 类型参数, 其Content-Type:application/x-www-form-urlencoded
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
             List<NameValuePair> urlParameters = new ArrayList<>();
@@ -222,17 +223,17 @@ public class HTTP {
     }
 
 
-
     /**
      * RESTFUL PUT
-     * @param httpClient
-     * @param closeClient
-     * @param baseUrl
-     * @param queryStrings
-     * @param headers
-     * @param params
-     * @return
-     * @throws IOException
+     *
+     * @param httpClient   ：
+     * @param closeClient  ：
+     * @param baseUrl      ：
+     * @param queryStrings ：
+     * @param headers      ：
+     * @param params       ：
+     * @return ：
+     * @throws IOException ：
      */
     public static Response put(CloseableHttpClient httpClient,
                                boolean closeClient,
@@ -271,8 +272,7 @@ public class HTTP {
             entity.setContentEncoding("UTF-8");
             entity.setContentType("application/json");
             httpPut.setEntity(entity);
-        }
-        else{
+        } else {
             // 处理表单Form 类型参数, 其Content-Type:application/x-www-form-urlencoded
             httpPut.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
             List<NameValuePair> urlParameters = new ArrayList<>();
@@ -332,12 +332,13 @@ public class HTTP {
 
     /**
      * RESTFUL Delete
-     * @param httpClient  : 请求的HttpClient, 可以为空
-     * @param closeClient : 请求后是否关闭标志, 可为空
-     * @param baseUrl     : 请求Url
+     *
+     * @param httpClient    : 请求的HttpClient, 可以为空
+     * @param closeClient   : 请求后是否关闭标志, 可为空
+     * @param baseUrl       : 请求Url
      * @param queryStrings: 参数
-     * @param headers     : 请求头信息, 可为空
-     * @return            : 返回自定义Response
+     * @param headers       : 请求头信息, 可为空
+     * @return : 返回自定义Response
      * @throws IOException
      */
     public static Response delete(CloseableHttpClient httpClient,
@@ -396,11 +397,10 @@ public class HTTP {
     }
 
     /**
-     *
-     * @param domainNameOrHost
-     * @param apiPath
-     * @param pathParams
-     * @return
+     * @param domainNameOrHost ：
+     * @param apiPath          ：
+     * @param pathParams       ：
+     * @return ：
      */
     public static String createBaseUrl(String domainNameOrHost, String apiPath, String... pathParams) {
         StringBuilder baseUrl = new StringBuilder("");
@@ -418,7 +418,7 @@ public class HTTP {
     /**
      * 拼接基础URL与请求参数querStrings生成请求的URL
      *
-     * @param baseUrl 基础URL,一般是域名或者IP:port
+     * @param baseUrl      基础URL,一般是域名或者IP:port
      * @param queryStrings 请求URL需要的请求参数
      * @return 返回拼接之后的请求URL
      */

@@ -1,4 +1,4 @@
-package com.lj.autotest.util;
+package com.lj.autotest.swagger;
 
 import com.alibaba.fastjson.JSONObject;
 

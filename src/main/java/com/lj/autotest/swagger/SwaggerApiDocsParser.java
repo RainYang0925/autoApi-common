@@ -1,7 +1,9 @@
-package com.lj.autotest.util;
+package com.lj.autotest.swagger;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.lj.autotest.util.HTTP;
+import com.lj.autotest.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

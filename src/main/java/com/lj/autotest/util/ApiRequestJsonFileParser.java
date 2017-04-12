@@ -22,7 +22,7 @@ public class ApiRequestJsonFileParser {
     private static Logger logger = LoggerFactory.getLogger(ApiRequestJsonFileParser.class);
 
     /**
-     * 根据ENUM 穷举生成 apiRequest 测试对象
+     * 根据json文件（测试用例文件）中定义的ENUM 穷举生成 apiRequest 测试对象
      *
      * @param apiRequest     : 基准apiRequest
      * @param mapEnumUrl     : 包含url中各变量的ENUM值得map对象
@@ -98,7 +98,7 @@ public class ApiRequestJsonFileParser {
     }
 
     /**
-     * 将jsonObject对象中的变量用ENUM中的具体值替换
+     * 将jsonObject对象中的变量用ENUM中的具体值替换：通用于处理headers和body
      *
      * @param json       : 包含需要替换变量的json
      * @param enumParams : 包含变量ENUM的json
@@ -295,6 +295,14 @@ public class ApiRequestJsonFileParser {
         return json;
     }
 
+
+    /**
+     * 处理json文件中设定的mysql操作
+     *
+     * @param file     ：json文件地址，注意系统已增加默认路径： resources/testdata/
+     * @param jsonPath ：mysql 语句所在json文件中的path
+     * @throws Exception :
+     */
     public static void parserSQL(String file, String jsonPath) throws Exception {
         String baseDir = ApiRequestJsonFileParser.class.getResource("/").getFile();
         File jsonFile = new File(baseDir + "/testdata/" + file);
@@ -338,6 +346,7 @@ public class ApiRequestJsonFileParser {
 
     /**
      * 替换json文件中的userid 和 token 变量为 Users.mapToken\Users.mapUid 中的具体值
+     * TODO 不同请求结构方式不同，需要定制
      *
      * @param formatString : 以<%XX%> 包裹的变量, 如<%user_all_over.Token%>,  <%user_not_paypwd.UserId%>
      * @return : 返回替换后的String
@@ -365,9 +374,9 @@ public class ApiRequestJsonFileParser {
                     value = Users.mapUid.get(user);
                 }
 
-                logger.info("UserId&Token 替换前 :" +formatString);
+                logger.info("UserId&Token 替换前 :" + formatString);
                 String valueAll = formatString.replaceAll("<%" + formatUIDToken + "%>", value);
-                logger.info("UserId&Token 替换后 :" +valueAll);
+                logger.info("UserId&Token 替换后 :" + valueAll);
                 return valueAll;
             } catch (Exception e) {
                 logger.error("UserId 或者 Token变量格式非法, 正确格式如<%user_all_over.Token%>,  <%user_not_paypwd.UserId%>");

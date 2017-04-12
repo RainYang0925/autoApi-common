@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Created by lijing on 16/6/3.
- * Description:
+ * Description: 测试logger
  */
 public class LoggerUtil {
     public static void main(String[] args){
