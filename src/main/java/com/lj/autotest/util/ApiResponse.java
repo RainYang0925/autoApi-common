@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document;
  * Desc: 自定义的接口Response，支持返回json格式、html格式的结果直接获取格式化内容；
  * 非以上格式化返回可调用BodyString
  */
-public class Response {
+public class ApiResponse {
     public int StatusCode;
     public JSONObject BodyJson;
     public Document BodyHtml;
@@ -18,7 +18,7 @@ public class Response {
     public CloseableHttpClient httpClient;
 
 
-    public Response(int statusCode, JSONObject body, Document bodyHtml, String bodyString, CloseableHttpClient httpClient) {
+    public ApiResponse(int statusCode, JSONObject body, Document bodyHtml, String bodyString, CloseableHttpClient httpClient) {
         StatusCode = statusCode;
         BodyJson = body;
         BodyHtml = bodyHtml;

@@ -1,6 +1,7 @@
 package com.lj.autotest.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 
@@ -198,9 +199,17 @@ public class ApiRequestParser {
                     // 用例文件中的为请求模板
                     ApiRequest apiRequest = new ApiRequest(url, method, headers, body);
 
-                    // TODO: 增加预期结果字段
+                    // TODO: 增加描述、前置、后置、预期结果字段
+                    String desc = context.read("$.apis[" + i + "].description");
+                    Map<String, String> map_before = parserBeforeMethod(context, i);
+                    Map<String, String> map_after = parserAfterMethod(context, i);
                     Object response_expected = context.read("$.apis[" + i + "].response");
+
+                    apiRequest.setDescription(desc);
+                    apiRequest.setBeforeMethod(map_before);
+                    apiRequest.setAfterMethod(map_after);
                     apiRequest.setResponse_expected(response_expected);
+
 
 
                     // json中设置了url、headers、body中变量ENUM数值,生成特定的ENUM组合结果
@@ -225,11 +234,16 @@ public class ApiRequestParser {
                     List<ApiRequest> apiRequestListEnum = ApiRequestJsonFileParser.enumApiRequest(apiRequest, mapUrlEnum, mapHeadersEnum, mapBodyEnum);
                     apiList.addAll(apiRequestListEnum);
 
-                    // 读取配置文件中是否需要做各参数异常值场景的自动生成用例操作的标志
-                    Boolean isNeedException = context.read("$.apis[" + i + "].isNeedException");
-                    if (isNeedException) {
-                        List<ApiRequest> apiList_temp = parser(apiList.get(0));
-                        apiList.addAll(apiList_temp);
+                    try {
+                        // 读取配置文件中是否需要做各参数异常值场景的自动生成用例操作的标志, 非必选项
+                        // TODO:当采用自动生成异常测试用例时，如何设置预期Response？
+                        Boolean isNeedException = context.read("$.apis[" + i + "].isNeedException");
+                        if (isNeedException) {
+                            List<ApiRequest> apiList_temp = parser(apiList.get(0));
+                            apiList.addAll(apiList_temp);
+                        }
+                    }catch (Exception e){
+
                     }
 
                 }
@@ -262,9 +276,53 @@ public class ApiRequestParser {
         return parser(files);
     }
 
+    /**
+     * 解析json文件中的前置（before）的sql、redis操作：每个sql、redis操作为一个key
+     *
+     * @param context ：待解析的json内容的 com.jayway.jsonpath.ReadContext
+     * @param index   ：apis 数组中的index
+     * @return ： 包含各sql、redis的map，每个sql、redis操作为一个key，如sql_0\sql_1\redis_0\redis_1等
+     */
+    public static Map<String, String> parserBeforeMethod(ReadContext context, int index) {
+        Map<String, String> map = new HashMap<>();
+        net.minidev.json.JSONArray sqls = context.read("$.apis[" + index + "].sqlBeforeMethod");
+        for (int i = 0; i < sqls.size(); i++) {
+            System.out.println(sqls.get(i));
+            map.put("mysql_" + i, String.valueOf(sqls.get(i)));
+        }
+
+        net.minidev.json.JSONArray redis = context.read("$.apis[" + index + "].redisBeforeMethod");
+        for (int i = 0; i < redis.size(); i++) {
+            map.put("redis_" + i, String.valueOf(redis.get(i)));
+        }
+        return map;
+    }
+
+    /**
+     * 解析json文件中的后置（after）的sql、redis操作：每个sql、redis操作为一个key
+     *
+     * @param context ：待解析的json内容的 com.jayway.jsonpath.ReadContext
+     * @param index   ：apis 数组中的index
+     * @return ： 包含各sql、redis的map，每个sql、redis操作为一个key，如sql_0\sql_1\redis_0\redis_1等
+     */
+    public static Map<String, String> parserAfterMethod(ReadContext context, int index) {
+        Map<String, String> map = new HashMap<>();
+        net.minidev.json.JSONArray sqls = context.read("$.apis[" + index + "].sqlAfterMethod");
+        for (int i = 0; i < sqls.size(); i++) {
+            System.out.println(sqls.get(i));
+            map.put("sql_" + i, String.valueOf(sqls.get(i)));
+        }
+
+        net.minidev.json.JSONArray redis = context.read("$.apis[" + index + "].redisAfterMethod");
+        for (int i = 0; i < redis.size(); i++) {
+            map.put("redis_" + i, String.valueOf(redis.get(i)));
+        }
+        return map;
+    }
+
 
 //    public static void main(String[] args) throws IOException {
-//        String file = "TestSample.json";
+//        String file = "NewTestSample.json";
 //        List<ApiRequest> list = parser(file);
 //        System.out.println(list.size());
 //        for(ApiRequest apiRequest: list){

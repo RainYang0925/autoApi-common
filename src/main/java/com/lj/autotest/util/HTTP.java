@@ -28,7 +28,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by lijing on 16/4/25.
- * Description: 自定义http接口请求类, 返回自定义的 Response 对象
+ * Description: 自定义http接口请求类, 返回自定义的 ApiResponse 对象
  */
 public class HTTP {
 
@@ -45,11 +45,11 @@ public class HTTP {
      * @return :返回自定义Response
      * @throws IOException
      */
-    public static Response get(CloseableHttpClient httpClient,
-                               boolean closeClient,
-                               String baseUrl,
-                               JSONObject queryStrings,
-                               JSONObject headers) throws IOException {
+    public static ApiResponse get(CloseableHttpClient httpClient,
+                                  boolean closeClient,
+                                  String baseUrl,
+                                  JSONObject queryStrings,
+                                  JSONObject headers) throws IOException {
         if (httpClient == null) {
             httpClient = HttpClients.createDefault();
         }
@@ -79,9 +79,9 @@ public class HTTP {
         logger.info(">>>> Request Headers -- END --:");
 
         CloseableHttpResponse response = httpClient.execute(httpGet);
-        logger.info(">>>> Response Code : " + response.getStatusLine().getStatusCode());
+        logger.info(">>>> ApiResponse Code : " + response.getStatusLine().getStatusCode());
 
-        Response resp = doResponse(httpClient, response);
+        ApiResponse resp = doResponse(httpClient, response);
         response.close();
 
         if (closeClient) {
@@ -91,29 +91,29 @@ public class HTTP {
         return resp;
     }
 
-    public static Response get(String url) throws IOException {
+    public static ApiResponse get(String url) throws IOException {
         return get(null, false, url, null, null);
     }
 
-    public static Response get(CloseableHttpClient httpClient, String url) throws IOException {
+    public static ApiResponse get(CloseableHttpClient httpClient, String url) throws IOException {
         return get(httpClient, false, url, null, null);
     }
 
-    public static Response get(String url, JSONObject headers) throws IOException {
+    public static ApiResponse get(String url, JSONObject headers) throws IOException {
         return get(null, false, url, null, headers);
     }
 
-    public static Response get(CloseableHttpClient httpClient, String url, JSONObject headers) throws IOException {
+    public static ApiResponse get(CloseableHttpClient httpClient, String url, JSONObject headers) throws IOException {
         return get(httpClient, false, url, null, headers);
     }
 
-    public static Response get(String url, JSONObject queryStrings, JSONObject headers) throws IOException {
+    public static ApiResponse get(String url, JSONObject queryStrings, JSONObject headers) throws IOException {
         return get(null, false, url, queryStrings, headers);
     }
 
-    public static Response get(CloseableHttpClient httpClient,
-                               String url, JSONObject queryStrings,
-                               JSONObject headers) throws IOException {
+    public static ApiResponse get(CloseableHttpClient httpClient,
+                                  String url, JSONObject queryStrings,
+                                  JSONObject headers) throws IOException {
         return get(httpClient, false, url, queryStrings, headers);
     }
 
@@ -130,12 +130,12 @@ public class HTTP {
      * @return :返回自定义Response
      * @throws IOException
      */
-    public static Response post(CloseableHttpClient httpClient,
-                                boolean closeClient,
-                                String baseUrl,
-                                JSONObject queryStrings,
-                                JSONObject headers,
-                                JSONObject params) throws IOException {
+    public static ApiResponse post(CloseableHttpClient httpClient,
+                                   boolean closeClient,
+                                   String baseUrl,
+                                   JSONObject queryStrings,
+                                   JSONObject headers,
+                                   JSONObject params) throws IOException {
 
         if (httpClient == null) {
             httpClient = HttpClients.createDefault();
@@ -187,9 +187,9 @@ public class HTTP {
         logger.info(">>>> POST Request Form: " + params.toJSONString());
 
         CloseableHttpResponse response = httpClient.execute(httpPost);
-        logger.info(">>>> Response Code : " + response.getStatusLine().getStatusCode());
+        logger.info(">>>> ApiResponse Code : " + response.getStatusLine().getStatusCode());
 
-        Response resp = doResponse(httpClient, response);
+        ApiResponse resp = doResponse(httpClient, response);
         response.close();
 
         if (closeClient) {
@@ -199,26 +199,26 @@ public class HTTP {
         return resp;
     }
 
-    public static Response post(String url, JSONObject params) throws IOException {
+    public static ApiResponse post(String url, JSONObject params) throws IOException {
         return post(null, false, url, null, null, params);
     }
 
-    public static Response post(String url, JSONObject params, JSONObject headers) throws IOException {
+    public static ApiResponse post(String url, JSONObject params, JSONObject headers) throws IOException {
         return post(null, false, url, null, headers, params);
     }
 
-    public static Response post(String url,
-                                JSONObject queryStrings,
-                                JSONObject headers,
-                                JSONObject params) throws IOException {
+    public static ApiResponse post(String url,
+                                   JSONObject queryStrings,
+                                   JSONObject headers,
+                                   JSONObject params) throws IOException {
         return post(null, false, url, queryStrings, headers, params);
     }
 
-    public static Response post(CloseableHttpClient httpClient, String url, JSONObject params) throws IOException {
+    public static ApiResponse post(CloseableHttpClient httpClient, String url, JSONObject params) throws IOException {
         return post(httpClient, false, url, null, null, params);
     }
 
-    public static Response post(CloseableHttpClient httpClient, String url, JSONObject params, JSONObject headers) throws IOException {
+    public static ApiResponse post(CloseableHttpClient httpClient, String url, JSONObject params, JSONObject headers) throws IOException {
         return post(httpClient, false, url, null, headers, params);
     }
 
@@ -235,12 +235,12 @@ public class HTTP {
      * @return ：
      * @throws IOException ：
      */
-    public static Response put(CloseableHttpClient httpClient,
-                               boolean closeClient,
-                               String baseUrl,
-                               JSONObject queryStrings,
-                               JSONObject headers,
-                               JSONObject params) throws IOException {
+    public static ApiResponse put(CloseableHttpClient httpClient,
+                                  boolean closeClient,
+                                  String baseUrl,
+                                  JSONObject queryStrings,
+                                  JSONObject headers,
+                                  JSONObject params) throws IOException {
 
         if (httpClient == null) {
             httpClient = HttpClients.createDefault();
@@ -299,9 +299,9 @@ public class HTTP {
         logger.info(">>>> PUT Request Form: " + params.toJSONString());
 
         CloseableHttpResponse response = httpClient.execute(httpPut);
-        logger.info(">>>> Response Code : " + response.getStatusLine().getStatusCode());
+        logger.info(">>>> ApiResponse Code : " + response.getStatusLine().getStatusCode());
 
-        Response resp = doResponse(httpClient, response);
+        ApiResponse resp = doResponse(httpClient, response);
         response.close();
 
         if (closeClient) {
@@ -311,21 +311,21 @@ public class HTTP {
         return resp;
     }
 
-    public static Response put(String url,
-                               JSONObject headers) throws IOException {
+    public static ApiResponse put(String url,
+                                  JSONObject headers) throws IOException {
         return put(null, false, url, null, headers, null);
     }
 
-    public static Response put(String url,
-                               JSONObject headers,
-                               JSONObject params) throws IOException {
+    public static ApiResponse put(String url,
+                                  JSONObject headers,
+                                  JSONObject params) throws IOException {
         return put(null, false, url, null, headers, params);
     }
 
-    public static Response put(CloseableHttpClient httpClient,
-                               String url,
-                               JSONObject headers,
-                               JSONObject params) throws IOException {
+    public static ApiResponse put(CloseableHttpClient httpClient,
+                                  String url,
+                                  JSONObject headers,
+                                  JSONObject params) throws IOException {
         return put(httpClient, false, url, null, headers, params);
     }
 
@@ -341,11 +341,11 @@ public class HTTP {
      * @return : 返回自定义Response
      * @throws IOException
      */
-    public static Response delete(CloseableHttpClient httpClient,
-                                  boolean closeClient,
-                                  String baseUrl,
-                                  JSONObject queryStrings,
-                                  JSONObject headers) throws IOException {
+    public static ApiResponse delete(CloseableHttpClient httpClient,
+                                     boolean closeClient,
+                                     String baseUrl,
+                                     JSONObject queryStrings,
+                                     JSONObject headers) throws IOException {
 
         if (httpClient == null) {
             httpClient = HttpClients.createDefault();
@@ -376,9 +376,9 @@ public class HTTP {
         logger.info(">>>> Request Headers -- END --:");
 
         CloseableHttpResponse response = httpClient.execute(httpDelete);
-        logger.info(">>>> Response Code : " + response.getStatusLine().getStatusCode());
+        logger.info(">>>> ApiResponse Code : " + response.getStatusLine().getStatusCode());
 
-        Response resp = doResponse(httpClient, response);
+        ApiResponse resp = doResponse(httpClient, response);
         response.close();
 
         if (closeClient) {
@@ -388,11 +388,11 @@ public class HTTP {
         return resp;
     }
 
-    public static Response delete(String url, JSONObject headers) throws IOException {
+    public static ApiResponse delete(String url, JSONObject headers) throws IOException {
         return delete(null, false, url, null, headers);
     }
 
-    public static Response delete(CloseableHttpClient httpClient, String url, JSONObject headers) throws IOException {
+    public static ApiResponse delete(CloseableHttpClient httpClient, String url, JSONObject headers) throws IOException {
         return delete(httpClient, false, url, null, headers);
     }
 
@@ -473,7 +473,7 @@ public class HTTP {
      * @return : 返回自定义的Response 对象
      * @throws IOException
      */
-    public static Response doResponse(CloseableHttpClient httpClient, HttpResponse response) throws IOException {
+    public static ApiResponse doResponse(CloseableHttpClient httpClient, HttpResponse response) throws IOException {
         int status_code = response.getStatusLine().getStatusCode();
 
         JSONObject bodyJson = new JSONObject();
@@ -481,7 +481,7 @@ public class HTTP {
         String bodyString = "";
 
         HttpEntity entity = response.getEntity();
-        logger.info("Response content length: " + entity.getContentLength());
+        logger.info("ApiResponse content length: " + entity.getContentLength());
 
         String strResult = EntityUtils.toString(entity, "UTF-8");
 
@@ -494,7 +494,7 @@ public class HTTP {
             doc = Jsoup.parse(strResult);
         }
 
-        return new Response(status_code, bodyJson, doc, bodyString, httpClient);
+        return new ApiResponse(status_code, bodyJson, doc, bodyString, httpClient);
 
     }
 
@@ -516,7 +516,7 @@ public class HTTP {
 
 //    public static void main(String[] args) throws IOException {
 //        String url="www.baidu.com";
-//        Response response = HTTP.get(url);
+//        ApiResponse response = HTTP.get(url);
 //        System.out.println(response.BodyString);
 //
 //    }

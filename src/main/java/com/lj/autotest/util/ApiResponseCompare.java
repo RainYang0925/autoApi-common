@@ -4,7 +4,6 @@ import com.jayway.jsonpath.JsonPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +15,10 @@ import java.util.Map;
  * 支持json、jsonp、string、html等格式；
  * 支持自定义需要比较的字段及忽略字段
  */
-public class ResponseCompare {
-    private static Logger logger = LoggerFactory.getLogger(ResponseCompare.class);
+public class ApiResponseCompare {
+    private static Logger logger = LoggerFactory.getLogger(ApiResponseCompare.class);
 
-    public static boolean compare(Object expected, Response actual) throws Exception {
+    public static boolean compare(Object expected, ApiResponse actual) throws Exception {
         try {
             if (actual.getBodyJson() != null) {
                 // 返回结果是json类型
@@ -116,7 +115,7 @@ public class ResponseCompare {
     }
 
     public static void main(String[] args) throws IOException {
-//        String baseDir = ResponseCompare.class.getResource("/").getFile() + "testcase/";
+//        String baseDir = ApiResponseCompare.class.getResource("/").getFile() + "testcase/";
 //        File file = new File(baseDir + "TestSample.json");
 //
 //        Object expected = JsonPath.read(file, "$.apis[0].response");

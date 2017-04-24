@@ -1,21 +1,14 @@
 {
-  "description": "用户进行一次操作 /api/v1/resources/{userType}",
-  "sqlBeforeClass": [
-    "select * from mydata2.T_User order by UserId  limit 1;",
-    "select * from  mydata2.T_Card limit 1;"
-  ],
-  "sqlAfterClass": [
-    "delete from mydata1.T_User where UserId=60;",
-    "delete from mydata2.T_S_User where UserId=60;"
-  ],
-  "sqlBeforeMethod": [
-    "insert into mydata2.T_User (Id,State, CreateTime, LastModifyTime) values(60,0, NOW(), NOW());"
-  ],
-  "sqlAfterMethod": [
-  ],
   "apis": [
     {
-      "desc": "测试接口模板",
+      "description": "用户进行一次操作 /api/v1/resources/{userType}",
+      "sqlBeforeMethod": [
+        "insert into mydata2.T_User (Id,State, CreateTime, LastModifyTime) values(60,0, NOW(), NOW());",
+        "insert into mydata1.T_User (Id,State, CreateTime, LastModifyTime) values(60,0, NOW(), NOW());"
+      ],
+      "sqlAfterMethod": [],
+      "redisBeforeMethod": ["set switch 0", "set balcklist 0,1,2"],
+      "redisAfterMethod": [],
       "url": "http://localhost:8080/api/v1/resources/{userType}?platform={platform}",
       "method": "post",
       "headers": {
@@ -27,29 +20,6 @@
       },
       "body": {
       },
-      "isNeedException": true,
-      "EnumURL": {
-        "userType": [
-          "FreshUser",
-          "NewUser",
-          "OldUser",
-          "LosingUser",
-          "All"
-        ],
-        "platform": [
-          "baidu",
-          "sougou",
-          "all"
-        ]
-      },
-      "EnumHeaders": {
-        "Authorization": [
-          "encrypt <%user_all_over.Token%>",
-          "<%user_all_over.Token%>",
-          "encrypt <%user_all_over.Token%>123"
-        ]
-      },
-      "EnumBody": {},
       "response": {
         "code": 0,
         "message": "成功",
@@ -62,146 +32,22 @@
           }
         ]
       },
-      "response3":{
-        "code": 0,
-        "message": "成功",
-        "data": [{
-          "subjectId": 1,
-          "name": "银联",
-          "selected": true,
-          "logoUrl": "https://s1.wacdn.com/wis/169/4c30b0535512a88a_59x58.png"
-        }, {
-          "subjectId": 2,
-          "name": "visa",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/2354e6384123e0cc_58x58.png"
-        }, {
-          "subjectId": 3,
-          "name": "万事达",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/ec4fd0e496d7bbfc_58x58.png"
-        }, {
-          "subjectId": 4,
-          "name": "招商银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/d883778866c6af37_58x58.png"
-        }, {
-          "subjectId": 5,
-          "name": "交通银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/e1f46e3980ce5833_58x58.png"
-        }, {
-          "subjectId": 6,
-          "name": "建设银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/b34ef740db90a6cd_58x58.png"
-        }, {
-          "subjectId": 7,
-          "name": "中信银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/49e22678c32ecceb_58x58.png"
-        }, {
-          "subjectId": 8,
-          "name": "广发银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/ff18c2285274bc3b_58x58.png"
-        }, {
-          "subjectId": 9,
-          "name": "平安银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/b30e9560b3363cab_58x58.png"
-        }, {
-          "subjectId": 10,
-          "name": "工商银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/b6b2bfcc54df6e6a_58x58.png"
-        }, {
-          "subjectId": 11,
-          "name": "光大银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/7943eb953d08c45e_58x58.png"
-        }, {
-          "subjectId": 12,
-          "name": "浦发银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/aec7fc3d87a8041a_59x59.png"
-        }, {
-          "subjectId": 13,
-          "name": "民生银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/6a21ae13e066990b_58x58.png"
-        }, {
-          "subjectId": 14,
-          "name": "农业银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/efa2ecc198cd547b_58x58.png"
-        }, {
-          "subjectId": 15,
-          "name": "兴业银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/b9c46f9528a4767e_59x58.png"
-        }, {
-          "subjectId": 16,
-          "name": "华夏银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/1c1d5e585f7f758d_58x59.png"
-        }, {
-          "subjectId": 17,
-          "name": "中国银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/686a18051817e82d_58x58.png"
-        }, {
-          "subjectId": 18,
-          "name": "上海银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/c658716592ee1b5b_58x58.png"
-        }, {
-          "subjectId": 19,
-          "name": "北京银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/23497d56c25e15c4_58x58.png"
-        }, {
-          "subjectId": 20,
-          "name": "宁波银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/de37077a18bb323b_58x58.png"
-        }, {
-          "subjectId": 21,
-          "name": "花旗银行",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/a52313bd7d8be56d_58x58.png"
-        }, {
-          "subjectId": 22,
-          "name": "美国运通",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/bb4c47e2267053f1_58x58.png"
-        }, {
-          "subjectId": 23,
-          "name": "jcb",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/4aa2d04e78db1047_58x58.png"
-        }, {
-          "subjectId": 24,
-          "name": "大莱",
-          "selected": false,
-          "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
-        }],
-        "success": true
-      },
       "response2": {
         "code": 0,
         "message": "成功",
         "data": [
-          {"subjectId": {
-            "subjectId": 24,
+          {
+            "subjectId": {
+              "subjectId": 24,
+              "name": "大莱",
+              "selected": false,
+              "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
+            },
             "name": "大莱",
             "selected": false,
             "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
-          },
-            "name": "大莱",
-            "selected": false,
-            "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
-          }],
+          }
+        ],
         "data2": {
           "subjectId": 24,
           "name": "大莱",
@@ -209,9 +55,8 @@
           "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
         },
         "success": true,
-        "temp":[]
-      },
-
+        "temp": []
+      }
     }
   ]
 }

@@ -2,8 +2,8 @@ package com.lj.autotest.swagger;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.lj.autotest.util.ApiResponse;
 import com.lj.autotest.util.HTTP;
-import com.lj.autotest.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +28,8 @@ public class SwaggerApiDocsParser {
      * @throws IOException :
      */
     public static List<SwaggerPath> parser(String url) throws IOException {
-        Response response = HTTP.get(url);
-        JSONObject body = response.getBodyJson();
+        ApiResponse apiResponse = HTTP.get(url);
+        JSONObject body = apiResponse.getBodyJson();
 
         List<SwaggerPath> listApis = new ArrayList<>(); // 待返回的对象
 
