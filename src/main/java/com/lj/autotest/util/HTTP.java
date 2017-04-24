@@ -474,10 +474,6 @@ public class HTTP {
      * @throws IOException
      */
     public static Response doResponse(CloseableHttpClient httpClient, HttpResponse response) throws IOException {
-//        Header[] headers = response.getAllHeaders();
-//        Header[] cookie = response.getHeaders("cookie");
-//        logger.info(cookie.toString());
-
         int status_code = response.getStatusLine().getStatusCode();
 
         JSONObject bodyJson = new JSONObject();
@@ -486,7 +482,7 @@ public class HTTP {
 
         HttpEntity entity = response.getEntity();
         logger.info("Response content length: " + entity.getContentLength());
-//        String strResult = EntityUtils.toString(entity);
+
         String strResult = EntityUtils.toString(entity, "UTF-8");
 
         bodyString = strResult;
@@ -511,22 +507,8 @@ public class HTTP {
      * @throws PatternSyntaxException
      */
     public static JSONObject jsonp(String jsonp) throws PatternSyntaxException {
-//        String pattern = "[(|\\[]?\\{(.*)\\}[)|\\]]?";
-//        String pattern = "\\{(.*)\\}";
-        String json = "";
-//        jsonp = "jsonp2&&jsonp2({\"code\":1,\"errors\":[{\"code\":401,\"message\":\"请求未经过认证.\"}],\"msg\":\"请求未经过认证.\",\"time\":\"2016-05-03 19:46:58\",\"trackingId\":\"61cc40a0-e5ce-4975-a487-c89e38f63886\"});";
-//        jsonp = "{\"code\":1,\"errors\":[{\"code\":401,\"message\":\"请求未经过认证.\"}],\"msg\":\"请求未经过认证.\",\"time\":\"2016-05-03 19:46:58\",\"trackingId\":\"61cc40a0-e5ce-4975-a487-c89e38f63886\"}";
 
-//        // 创建 Pattern 对象
-//        Pattern r = Pattern.compile(pattern);
-//
-//        // 创建 Matcher 对象
-//        Matcher m = r.matcher(jsonp);
-//
-//        if (m.find()) {
-//            json = m.group(0);
-//        }
-        json = jsonp.substring(jsonp.indexOf('{'), jsonp.lastIndexOf('}') + 1);
+        String json = jsonp.substring(jsonp.indexOf('{'), jsonp.lastIndexOf('}') + 1);
 
         return JSON.parseObject(json);
 

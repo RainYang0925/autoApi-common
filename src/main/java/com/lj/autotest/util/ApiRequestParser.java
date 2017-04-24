@@ -40,9 +40,9 @@ public class ApiRequestParser {
         List<ApiRequest> list_headers = parser_headers(apiRequest);
         apiList.addAll(list_headers);
 
-        // 针对params部分做异常值测试的集合
-        List<ApiRequest> list_params = parser_params(apiRequest);
-        apiList.addAll(list_params);
+        // 针对body部分做异常值测试的集合
+        List<ApiRequest> list_body = parser_body(apiRequest);
+        apiList.addAll(list_body);
 
         return apiList;
     }
@@ -112,22 +112,22 @@ public class ApiRequestParser {
 
 
     /**
-     * 针对params部分做异常值测试的集合
+     * 针对body部分做异常值测试的集合
      *
      * @param apiRequest : 请求样例
-     * @return : 返回针对params部分做异常值测试的集合的apiRequest对象集合
+     * @return : 返回针对body部分做异常值测试的集合的apiRequest对象集合
      */
-    public static List<ApiRequest> parser_params(ApiRequest apiRequest) {
+    public static List<ApiRequest> parser_body(ApiRequest apiRequest) {
         List<ApiRequest> apiList = new ArrayList<>();
 
-        JSONObject params = apiRequest.getParams();
+        JSONObject body = apiRequest.getBody();
 
-        for (String key : params.keySet()) {
+        for (String key : body.keySet()) {
             for (String item : exceptionsString) {
-                JSONObject params_temp = (JSONObject) params.clone();
-                params_temp.put(key, item);
+                JSONObject body_temp = (JSONObject) body.clone();
+                body_temp.put(key, item);
                 ApiRequest apiRequest_temp = apiRequest.clone();
-                apiRequest_temp.setParams(params_temp);
+                apiRequest_temp.setBody(body_temp);
                 apiList.add(apiRequest_temp);
             }
         }
@@ -151,9 +151,9 @@ public class ApiRequestParser {
         String s[] = new String[0];
         if (files.length == 0) {
             // 如果不指定数据文件,则读取目录下的所有文件
-            // 规定所有的测试用例json文件位置放在 resources/testdata/ 目录下,格式固定
-//            File dirName = new File(this.getClass().getResource("/").getFile() + "testdata");
-            File dirName = new File(ApiRequestParser.class.getResource("/").getFile() + "testdata");
+            // 规定所有的测试用例json文件位置放在 resources/testcase/ 目录下,格式固定
+//            File dirName = new File(this.getClass().getResource("/").getFile() + "testcase");
+            File dirName = new File(ApiRequestParser.class.getResource("/").getFile() + "testcase");
             if (dirName.isDirectory()) {
                 s = dirName.list();
             }
@@ -164,8 +164,8 @@ public class ApiRequestParser {
 
         if (s.length > 0) {  // 存在用例文件时才执行
 
-//            String baseDir = this.getClass().getResource("/").getFile() + "testdata";
-            String baseDir = ApiRequestParser.class.getResource("/").getFile() + "testdata";
+//            String baseDir = this.getClass().getResource("/").getFile() + "testcase";
+            String baseDir = ApiRequestParser.class.getResource("/").getFile() + "testcase";
             // 处理每一个文件
             for (String jsonFileName : s) {
 
@@ -184,25 +184,26 @@ public class ApiRequestParser {
                     Map<String, String> headersMap = context.read("$.apis[" + i + "].headers");
                     JSONObject headers = new JSONObject();
                     for (String key : headersMap.keySet()) {
-//                        headers.put(key, headersMap.get(key));
-
-                        // 支持变量参数中userid 和 token 以变量形式传入
+                        // 支持变量参数中userId 和 token 以变量形式传入
                         headers.put(key, ApiRequestJsonFileParser.formatUidAndToken(headersMap.get(key)));
                     }
 
-                    Map<String, String> paramsMap = context.read("$.apis[" + i + "].params");
-                    JSONObject params = new JSONObject();
-                    for (String key : paramsMap.keySet()) {
-//                        params.put(key, paramsMap.get(key));
-
-                        // 支持变量参数中userid 和 token 以变量形式传入
-                        params.put(key, ApiRequestJsonFileParser.formatUidAndToken(paramsMap.get(key)));
+                    Map<String, String> bodyMap = context.read("$.apis[" + i + "].body");
+                    JSONObject body = new JSONObject();
+                    for (String key : bodyMap.keySet()) {
+                        // 支持变量参数中userId 和 token 以变量形式传入
+                        body.put(key, ApiRequestJsonFileParser.formatUidAndToken(bodyMap.get(key)));
                     }
 
                     // 用例文件中的为请求模板
-                    ApiRequest apiRequest = new ApiRequest(url, method, headers, params);
+                    ApiRequest apiRequest = new ApiRequest(url, method, headers, body);
 
-                    // json中设置了url、headers、params中变量ENUM数值,生成特定的ENUM组合结果
+                    // TODO: 增加预期结果字段
+                    Object response_expected = context.read("$.apis[" + i + "].response");
+                    apiRequest.setResponse_expected(response_expected);
+
+
+                    // json中设置了url、headers、body中变量ENUM数值,生成特定的ENUM组合结果
                     LinkedHashMap mapUrlEnum = new LinkedHashMap();
                     try {
                         mapUrlEnum = context.read("$.apis[" + i + "].EnumURL");
@@ -215,13 +216,13 @@ public class ApiRequestParser {
                     } catch (Exception e) {
 
                     }
-                    LinkedHashMap mapParamsEnum = new LinkedHashMap();
+                    LinkedHashMap mapBodyEnum = new LinkedHashMap();
                     try {
-                        mapParamsEnum = context.read("$.apis[" + i + "].EnumParams");
+                        mapBodyEnum = context.read("$.apis[" + i + "].EnumBody");
                     } catch (Exception e) {
 
                     }
-                    List<ApiRequest> apiRequestListEnum = ApiRequestJsonFileParser.enumApiRequest(apiRequest, mapUrlEnum, mapHeadersEnum, mapParamsEnum);
+                    List<ApiRequest> apiRequestListEnum = ApiRequestJsonFileParser.enumApiRequest(apiRequest, mapUrlEnum, mapHeadersEnum, mapBodyEnum);
                     apiList.addAll(apiRequestListEnum);
 
                     // 读取配置文件中是否需要做各参数异常值场景的自动生成用例操作的标志
@@ -270,7 +271,7 @@ public class ApiRequestParser {
 //            System.out.println(">>>>>>>>");
 //            System.out.println("url: "+apiRequest.getUrl());
 //            System.out.println("headers: "+ apiRequest.getHeaders());
-//            System.out.println("params: "+apiRequest.getParams());
+//            System.out.println("body: "+apiRequest.getBody());
 //        }
 //    }
 }

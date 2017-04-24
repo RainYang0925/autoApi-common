@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.jsoup.nodes.Document;
 
-//import org.apache.http.client.HttpClient;
 
 /**
  * Created by lijing on 16/5/4.
- * Desc: 自定义的接口Response，支持返回json格式、html格式的结果直接获取格式化内容； 非格式化返回可调用BodyString
+ * Desc: 自定义的接口Response，支持返回json格式、html格式的结果直接获取格式化内容；
+ * 非以上格式化返回可调用BodyString
  */
 public class Response {
     public int StatusCode;

@@ -49,12 +49,12 @@ t-Enum = t—urlEnum * t-headerEnum * t-paramEnum
 ```
 t-urlExce = M-url * S-url
 ```
-同理, headers , params 中亦如是: 
+同理, headers , body 中亦如是: 
 ```
 t-headersExce = M-headers * S-exce,
-t-paramsExce = M-params * S-exce
+t-paramsExce = M-body * S-exce
 ```
-ps: headers\params 的异常字符串集合为同一个参数配置
+ps: headers\body 的异常字符串集合为同一个参数配置
 异常字符串生成的总用例数为: 
 ```
 t-Exec = t-urlExce + t-headersExce + t-paramsExce
@@ -96,7 +96,7 @@ tAll = t-Enum + t-Exec
         "userId": "<%user_all_over.UserId%>",
         "Authorization": "encrypt <%user_all_over.Token%>"
       },
-      "params": {
+      "body": {
       },
       "isNeedException": true,
       "EnumURL": {

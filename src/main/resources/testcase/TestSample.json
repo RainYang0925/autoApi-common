@@ -25,7 +25,7 @@
         "userId": "<%user_all_over.UserId%>",
         "Authorization": "encrypt <%user_all_over.Token%>"
       },
-      "params": {
+      "body": {
       },
       "isNeedException": true,
       "EnumURL": {
@@ -49,8 +49,20 @@
           "encrypt <%user_all_over.Token%>123"
         ]
       },
-      "EnumParams": {},
-      "response":{
+      "EnumBody": {},
+      "response": {
+        "code": 0,
+        "message": "成功",
+        "data": [
+          {
+            "subjectId": 1,
+            "name": "银联",
+            "selected": true,
+            "logoUrl": "https://s1.wacdn.com/wis/169/4c30b0535512a88a_59x58.png"
+          }
+        ]
+      },
+      "response3":{
         "code": 0,
         "message": "成功",
         "data": [{
@@ -175,7 +187,31 @@
           "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
         }],
         "success": true
-      }
+      },
+      "response2": {
+        "code": 0,
+        "message": "成功",
+        "data": [
+          {"subjectId": {
+              "subjectId": 24,
+              "name": "大莱",
+              "selected": false,
+              "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
+            },
+            "name": "大莱",
+            "selected": false,
+            "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
+          }],
+        "data2": {
+          "subjectId": 24,
+          "name": "大莱",
+          "selected": false,
+          "logoUrl": "https://s1.wacdn.com/wis/169/c8ff3de109af9def_58x58.png"
+        },
+        "success": true,
+        "temp":[]
+      },
+
     }
   ]
 }

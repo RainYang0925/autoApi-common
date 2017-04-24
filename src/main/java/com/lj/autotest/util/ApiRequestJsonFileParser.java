@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by lijing on 16/10/31.
- * Description: 处理resource/testdata/ 下的json 文件
+ * Description: 处理resource/testcase/ 下的json 文件
  */
 public class ApiRequestJsonFileParser {
     private static Logger logger = LoggerFactory.getLogger(ApiRequestJsonFileParser.class);
@@ -27,28 +27,28 @@ public class ApiRequestJsonFileParser {
      * @param apiRequest     : 基准apiRequest
      * @param mapEnumUrl     : 包含url中各变量的ENUM值得map对象
      * @param mapEnumHeaders : 包含headers中各变量的ENUM值得map对象
-     * @param mapEnumParams  : 包含params中各变量的ENUM值得map对象
+     * @param mapEnumBody  : 包含body中各变量的ENUM值得map对象
      * @return : 穷举的 apiRequest list集合
      */
-    public static List<ApiRequest> enumApiRequest(ApiRequest apiRequest, LinkedHashMap mapEnumUrl, LinkedHashMap mapEnumHeaders, LinkedHashMap mapEnumParams) {
+    public static List<ApiRequest> enumApiRequest(ApiRequest apiRequest, LinkedHashMap mapEnumUrl, LinkedHashMap mapEnumHeaders, LinkedHashMap mapEnumBody) {
         JSONObject jsonEnumUrl = map2JSON(mapEnumUrl);
         JSONObject jsonEnumHeaders = map2JSON(mapEnumHeaders);
-        JSONObject jsonEnumParams = map2JSON(mapEnumParams);
+        JSONObject jsonEnumBody = map2JSON(mapEnumBody);
 
-        return enumApiRequest(apiRequest, jsonEnumUrl, jsonEnumHeaders, jsonEnumParams);
+        return enumApiRequest(apiRequest, jsonEnumUrl, jsonEnumHeaders, jsonEnumBody);
     }
 
-    public static List<ApiRequest> enumApiRequest(ApiRequest apiRequest, JSONObject jsonEnumUrl, JSONObject jsonEnumHeaders, JSONObject jsonEnumParams) {
+    public static List<ApiRequest> enumApiRequest(ApiRequest apiRequest, JSONObject jsonEnumUrl, JSONObject jsonEnumHeaders, JSONObject jsonEnumBody) {
         String url_format = apiRequest.getUrl();
         JSONObject headers = apiRequest.getHeaders();
-        JSONObject params = apiRequest.getParams();
+        JSONObject body = apiRequest.getBody();
 
 
         List<String> urlList = replaceURLFormatAll(url_format, jsonEnumUrl);
         List<JSONObject> headersList = enumJSON(headers, jsonEnumHeaders);
-        List<JSONObject> paramsList = enumJSON(params, jsonEnumParams);
+        List<JSONObject> bodyList = enumJSON(body, jsonEnumBody);
 
-        List<ApiRequest> apiRequestList = enumApiRequest(apiRequest, urlList, headersList, paramsList);
+        List<ApiRequest> apiRequestList = enumApiRequest(apiRequest, urlList, headersList, bodyList);
         return apiRequestList;
 
     }
@@ -80,11 +80,11 @@ public class ApiRequestJsonFileParser {
         list.addAll(list_temp);
         list_temp.clear();
 
-        // 将每个apiRequest 的 params 中变量用ENUM数值替换
+        // 将每个apiRequest 的 body 中变量用ENUM数值替换
         for (ApiRequest apiTemp : list) {
-            for (JSONObject params : paramList) {
+            for (JSONObject body : paramList) {
                 ApiRequest apiTemp1 = apiTemp.clone();
-                apiTemp1.setParams(params);
+                apiTemp1.setBody(body);
                 list_temp.add(apiTemp1);
             }
         }
@@ -101,26 +101,26 @@ public class ApiRequestJsonFileParser {
      * 将jsonObject对象中的变量用ENUM中的具体值替换：通用于处理headers和body
      *
      * @param json       : 包含需要替换变量的json
-     * @param enumParams : 包含变量ENUM的json
+     * @param EnumBody : 包含变量ENUM的json
      * @return :
      */
-    public static List<JSONObject> enumJSON(JSONObject json, JSONObject enumParams) {
+    public static List<JSONObject> enumJSON(JSONObject json, JSONObject EnumBody) {
 
         List<JSONObject> jsonList_1 = new ArrayList<>();
         List<JSONObject> jsonList_2 = new ArrayList<>();
 
         jsonList_1.add(json);
 
-        Set<String> keys_list = enumParams.keySet();
+        Set<String> keys_list = EnumBody.keySet();
         for (String key : keys_list) {
-            JSONArray values = enumParams.getJSONArray(key);
+            JSONArray values = EnumBody.getJSONArray(key);
 
             for (int i = 0; i < values.size(); i++) {
                 for (JSONObject h_temp : jsonList_1) {
                     // 临时headers对象
                     JSONObject h_temp_enum = (JSONObject) h_temp.clone();
 
-                    // EnumHeaders 和 EnumParams 中的数值支持userId 、token 以变量形式赋值
+                    // EnumHeaders 和 EnumBody 中的数值支持userId 、token 以变量形式赋值
                     h_temp_enum.put(key, formatUidAndToken(String.valueOf(values.get(i))));
                     jsonList_2.add(h_temp_enum);
                 }
@@ -182,15 +182,15 @@ public class ApiRequestJsonFileParser {
      * 替换url中的{}, 初始化为数组中的第一个值
      *
      * @param url        :原始url format, 带{},或者不带
-     * @param enumParams :配置文件中的Enum 数据块
+     * @param EnumBody :配置文件中的Enum 数据块
      * @return : 返回一个urlSample
      */
-    public static String sampleUrl(String url, JSONObject enumParams) {
-//        JSONObject enumParams = (JSONObject) JSONPath.read(json, "$.apis[0].Enum");
+    public static String sampleUrl(String url, JSONObject EnumBody) {
+//        JSONObject EnumBody = (JSONObject) JSONPath.read(json, "$.apis[0].Enum");
         String sample = url;
         HashMap<String, List<String>> urlMap = format_url(url);
-        sample = replaceURLFormatSamplePart(sample, urlMap.get("path"), enumParams);
-        sample = replaceURLFormatSamplePart(sample, urlMap.get("query"), enumParams);
+        sample = replaceURLFormatSamplePart(sample, urlMap.get("path"), EnumBody);
+        sample = replaceURLFormatSamplePart(sample, urlMap.get("query"), EnumBody);
 
         return sample;
     }
@@ -201,17 +201,17 @@ public class ApiRequestJsonFileParser {
      *
      * @param url        : 原始url format, 带{},或者不带
      * @param list       : 原始url切分出来的urlPath 、 urlQuery 中的一个list
-     * @param enumParams : 配置文件中的Enum 数据块
+     * @param EnumBody : 配置文件中的Enum 数据块
      * @return : 返回一个urlSample
      */
-    public static String replaceURLFormatSamplePart(String url, List<String> list, JSONObject enumParams) {
+    public static String replaceURLFormatSamplePart(String url, List<String> list, JSONObject EnumBody) {
         String sample = url;
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {
                 String param_Temp = list.get(i);
 
-                if (enumParams.keySet().contains(param_Temp)) {
-                    String param_Temp_valueSample = enumParams.getJSONArray(param_Temp).getString(0);
+                if (EnumBody.keySet().contains(param_Temp)) {
+                    String param_Temp_valueSample = EnumBody.getJSONArray(param_Temp).getString(0);
                     sample = sample.replace("{" + param_Temp + "}", param_Temp_valueSample);
                 }
             }
@@ -224,21 +224,21 @@ public class ApiRequestJsonFileParser {
      * 根据参数ENUM值,替换url的所有变量,生成组合的url list结果
      *
      * @param url        : url format, path、query中变量用{}包裹
-     * @param enumParams : 包含参数ENUM数值的json
+     * @param EnumBody : 包含参数ENUM数值的json
      * @return : 返回组合的url list, 假设变量为m1、m2、m3...mi, 每个变量的ENUM个数分别为n1、n2、n3...ni, 则总返回数为n1*n2*n3...ni
      */
-    public static List<String> replaceURLFormatAll(String url, JSONObject enumParams) {
+    public static List<String> replaceURLFormatAll(String url, JSONObject EnumBody) {
         HashMap<String, List<String>> urlMap = format_url(url);
 
         // 存储包括path、query参数替换后的所有的url list
         List<String> urlEnum_listAll = new ArrayList<>();
 
         // 存储替换path中参数后的url list
-        List<String> urlEnum_path = replaceURLFormatPart(url, urlMap.get("path"), enumParams);
+        List<String> urlEnum_path = replaceURLFormatPart(url, urlMap.get("path"), EnumBody);
 
         // 对每一个替换了path中变量的url format,再继续替换query中变量
         for (String urlEnum_pathFormat : urlEnum_path) {
-            List<String> urlEnum_QueryTemp = replaceURLFormatPart(urlEnum_pathFormat, urlMap.get("query"), enumParams);
+            List<String> urlEnum_QueryTemp = replaceURLFormatPart(urlEnum_pathFormat, urlMap.get("query"), EnumBody);
             urlEnum_listAll.addAll(urlEnum_QueryTemp);
         }
 
@@ -250,10 +250,10 @@ public class ApiRequestJsonFileParser {
      *
      * @param url        : url format
      * @param list       : 变量参数list
-     * @param enumParams : 参数值ENUM
+     * @param EnumBody : 参数值ENUM
      * @return : 返回替换后的组合url list
      */
-    public static List<String> replaceURLFormatPart(String url, List<String> list, JSONObject enumParams) {
+    public static List<String> replaceURLFormatPart(String url, List<String> list, JSONObject EnumBody) {
 
         List<String> url_s_1 = new ArrayList<>();  // 交叉替换存放数组1
         List<String> url_s_2 = new ArrayList<>();  // 交叉替换存放数组2
@@ -262,12 +262,12 @@ public class ApiRequestJsonFileParser {
 
         for (int i = 0; i < list.size(); i++) {
             String format = list.get(i);
-            if (enumParams.keySet().contains(format)) {
+            if (EnumBody.keySet().contains(format)) {
                 for (int m = 0; m < url_s_1.size(); m++) {
                     String url_format = url_s_1.get(m);
 
-                    for (int j = 0; j < enumParams.getJSONArray(format).size(); j++) {
-                        String value = enumParams.getJSONArray(format).getString(j);
+                    for (int j = 0; j < EnumBody.getJSONArray(format).size(); j++) {
+                        String value = EnumBody.getJSONArray(format).getString(j);
                         String url_sample = url_format.replace("{" + format + "}", value);
                         url_s_2.add(url_sample);
                     }
@@ -299,13 +299,13 @@ public class ApiRequestJsonFileParser {
     /**
      * 处理json文件中设定的mysql操作
      *
-     * @param file     ：json文件地址，注意系统已增加默认路径： resources/testdata/
+     * @param file     ：json文件地址，注意系统已增加默认路径： resources/testcase/
      * @param jsonPath ：mysql 语句所在json文件中的path
      * @throws Exception :
      */
     public static void parserSQL(String file, String jsonPath) throws Exception {
         String baseDir = ApiRequestJsonFileParser.class.getResource("/").getFile();
-        File jsonFile = new File(baseDir + "/testdata/" + file);
+        File jsonFile = new File(baseDir + "/testcase/" + file);
         ReadContext context = JsonPath.parse(jsonFile);
 
         net.minidev.json.JSONArray sqls;
