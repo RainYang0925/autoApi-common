@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
+ * 此类处理请求执行的前置、后置操作，主要是mysql、redis等
  * Created by lijing on 2017/4/24.
  * Desc:
  */

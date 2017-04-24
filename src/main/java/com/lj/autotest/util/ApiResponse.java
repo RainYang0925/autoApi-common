@@ -11,12 +11,14 @@ import org.jsoup.nodes.Document;
  * 非以上格式化返回可调用BodyString
  */
 public class ApiResponse {
-    public int StatusCode;
-    public JSONObject BodyJson;
-    public Document BodyHtml;
-    public String BodyString;
-    public CloseableHttpClient httpClient;
+    private int StatusCode;   // 接口返回的status code
+    private JSONObject BodyJson;
+    private Document BodyHtml;
+    private String BodyString;
+    private CloseableHttpClient httpClient;
+    private ApiResponseCompareStatusEnum responseCompareStatus; // 实际结果和预期结果的比较状态
 
+    public ApiResponse(){}
 
     public ApiResponse(int statusCode, JSONObject body, Document bodyHtml, String bodyString, CloseableHttpClient httpClient) {
         StatusCode = statusCode;
@@ -64,5 +66,13 @@ public class ApiResponse {
 
     public void setBodyString(String bodyString) {
         BodyString = bodyString;
+    }
+
+    public ApiResponseCompareStatusEnum getResponseCompareStatus() {
+        return responseCompareStatus;
+    }
+
+    public void setResponseCompareStatus(ApiResponseCompareStatusEnum responseCompareStatus) {
+        this.responseCompareStatus = responseCompareStatus;
     }
 }

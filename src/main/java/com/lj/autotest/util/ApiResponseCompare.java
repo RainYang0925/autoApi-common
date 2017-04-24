@@ -43,7 +43,7 @@ public class ApiResponseCompare {
      * @return ：
      */
     public static boolean compareString(String expected, String actual) {
-        if (!actual.equalsIgnoreCase(actual)) {
+        if (!expected.equalsIgnoreCase(actual)) {
             return false;
         } else {
             return true;
@@ -67,7 +67,10 @@ public class ApiResponseCompare {
             for (String path : list) {
                 String value_expected = String.valueOf(JsonPath.read(expected, "$." + path));
                 String value_actual = String.valueOf(JsonPath.read(actual, "$." + path));
-                compareString(value_actual, value_expected);
+                boolean temp = compareString(value_actual, value_expected);
+                if(!temp){
+                    return false;
+                }
             }
         } catch (Exception e) {
             return false;

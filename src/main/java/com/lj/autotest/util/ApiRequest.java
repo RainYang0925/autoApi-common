@@ -164,19 +164,19 @@ public class ApiRequest {
      * @return ：
      * @throws IOException ：
      */
-    public ApiRequestStatusEnum compareResponse() throws Exception {
+    public ApiResponseCompareStatusEnum compareResponse() throws Exception {
         try {
             boolean result = ApiResponseCompare.compare(this.response_expected, this.apiResponse_actual);
             if (result) {
                 this.setStatus(1);
-                return ApiRequestStatusEnum.SUCCESS;
+                return ApiResponseCompareStatusEnum.SUCCESS;
             } else {
                 this.setStatus(2);
-                return ApiRequestStatusEnum.FAIL;
+                return ApiResponseCompareStatusEnum.FAIL;
             }
         }catch (Exception e){
             this.setStatus(3);
-            return ApiRequestStatusEnum.BLOCK;
+            return ApiResponseCompareStatusEnum.BLOCK;
         }
     }
 
@@ -186,7 +186,7 @@ public class ApiRequest {
      * @return ： 返回请求执行的response
      * @throws IOException ：
      */
-    public ApiRequestStatusEnum execute() throws Exception {
+    public ApiResponse execute() throws Exception {
         try {
             // TODO:执行请求前置动作
             ApiRequestExecute.execute(this.beforeMethod);
@@ -197,10 +197,13 @@ public class ApiRequest {
             // TODO:执行请求后置动作
             ApiRequestExecute.execute(this.afterMethod);
 
-            return compareResponse();
+            apiResponse.setResponseCompareStatus(compareResponse());
+            return apiResponse;
         }catch (Exception e){
+            ApiResponse apiResponse = new ApiResponse();
             this.setStatus(3);
-            return ApiRequestStatusEnum.BLOCK;
+            apiResponse.setResponseCompareStatus(ApiResponseCompareStatusEnum.BLOCK);
+            return apiResponse;
         }
     }
 

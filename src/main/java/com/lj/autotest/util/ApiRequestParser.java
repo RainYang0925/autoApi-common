@@ -321,15 +321,17 @@ public class ApiRequestParser {
     }
 
 
-//    public static void main(String[] args) throws IOException {
+//    public static void main(String[] args) throws Exception {
 //        String file = "NewTask.json";
 //        List<ApiRequest> list = parser(file);
 //        System.out.println(list.size());
 //        for(ApiRequest apiRequest: list){
 //            String v="{\"queryStr\":\"330326197901104121\",\"uid\":187654321}";
 //            apiRequest.getBody().put("task_info",v);
-//            ApiResponse response = apiRequest.visit_url();
-//            System.out.println(response.BodyString);
+////            ApiResponse response = apiRequest.visit_url();
+//            ApiResponse response = apiRequest.execute();
+//            System.out.println(response.getBodyString());
+//            System.out.println(response.getResponseCompareStatus().toString());
 //        }
 //
 //    }
