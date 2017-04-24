@@ -126,7 +126,7 @@ public class HTTP {
      * @param baseUrl      :请求Url
      * @param queryStrings :请求Url参数
      * @param headers      :请求头信息
-     * @param params       :POST data参数
+     * @param body       :POST data参数
      * @return :返回自定义Response
      * @throws IOException
      */
@@ -135,7 +135,7 @@ public class HTTP {
                                    String baseUrl,
                                    JSONObject queryStrings,
                                    JSONObject headers,
-                                   JSONObject params) throws IOException {
+                                   JSONObject body) throws IOException {
 
         if (httpClient == null) {
             httpClient = HttpClients.createDefault();
@@ -145,8 +145,8 @@ public class HTTP {
             headers = new JSONObject();
         }
 
-        if (params == null) {
-            params = new JSONObject();
+        if (body == null) {
+            body = new JSONObject();
         }
 
         String requestUrl = createRequestUrl(baseUrl, queryStrings);
@@ -163,7 +163,7 @@ public class HTTP {
 
         if (headers.getString("Content-Type") != null && headers.getString("Content-Type").contains("application/json")) {
             // 处理Json格式参数, 其Content-Type:application/json
-            StringEntity entity = new StringEntity(params.toString(), "utf-8");//解决中文乱码问题
+            StringEntity entity = new StringEntity(body.toString(), "utf-8");//解决中文乱码问题
             entity.setContentEncoding("UTF-8");
             entity.setContentType("application/json");
             httpPost.setEntity(entity);
@@ -171,8 +171,8 @@ public class HTTP {
             // 处理表单Form 类型参数, 其Content-Type:application/x-www-form-urlencoded
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
             List<NameValuePair> urlParameters = new ArrayList<>();
-            for (String key : params.keySet()) {
-                urlParameters.add(new BasicNameValuePair(key, String.valueOf(params.get(key))));
+            for (String key : body.keySet()) {
+                urlParameters.add(new BasicNameValuePair(key, String.valueOf(body.get(key))));
             }
             httpPost.setEntity(new UrlEncodedFormEntity(urlParameters));
         }
@@ -184,7 +184,7 @@ public class HTTP {
             logger.info(eachHeader.getName() + ":" + eachHeader.getValue());
         }
         logger.info(">>>> Request Headers -- END --:");
-        logger.info(">>>> POST Request Form: " + params.toJSONString());
+        logger.info(">>>> POST Request Form: " + body.toJSONString());
 
         CloseableHttpResponse response = httpClient.execute(httpPost);
         logger.info(">>>> ApiResponse Code : " + response.getStatusLine().getStatusCode());
@@ -279,15 +279,10 @@ public class HTTP {
             for (String key : params.keySet()) {
                 urlParameters.add(new BasicNameValuePair(key, String.valueOf(params.get(key))));
             }
+            System.out.println("Content-Type: application/x-www-form-urlencoded;charset=utf-8");
             httpPut.setEntity(new UrlEncodedFormEntity(urlParameters));
         }
 
-//        // set Form parameters
-//        List<NameValuePair> urlParameters = new ArrayList<>();
-//        for (String key : params.keySet()) {
-//            urlParameters.add(new BasicNameValuePair(key, String.valueOf(params.get(key))));
-//        }
-//        httpPut.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         logger.info(">>>>>>>>>> executing PUT request : " + httpPut.toString());
         logger.info(">>>> Request Headers -- BEGIN --:");
@@ -513,6 +508,7 @@ public class HTTP {
         return JSON.parseObject(json);
 
     }
+
 
 //    public static void main(String[] args) throws IOException {
 //        String url="www.baidu.com";

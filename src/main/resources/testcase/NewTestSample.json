@@ -19,6 +19,12 @@
         "Authorization": "encrypt <%user_all_over.Token%>"
       },
       "body": {
+        "task_name": "JiaoTongGrabTask",
+        "channel": "cd-mgr-web",
+        "task_info": {
+          "queryStr": "330326197901104121",
+          "uid": 187654321
+        }
       },
       "response": {
         "code": 0,

@@ -1,0 +1,25 @@
+{
+  "apis": [
+    {
+      "description": "newTask",
+      "sqlBeforeMethod": [],
+      "sqlAfterMethod": [],
+      "redisBeforeMethod": [],
+      "redisAfterMethod": [],
+      "url": "http://172.16.50.158:8882/force/phantom/new_task",
+      "method": "post",
+      "headers": {
+        "Accept": "*/*"
+      },
+      "body": {
+        "task_name": "JiaoTongGrabTask",
+        "channel": "cd-mgr-web",
+        "task_info": {"queryStr":"330326197901104121","uid":187654321}
+      },
+      "response": {
+        "msg": "success",
+        "status": 200
+      }
+    }
+  ]
+}

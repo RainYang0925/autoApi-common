@@ -193,7 +193,7 @@ public class ApiRequestParser {
                     JSONObject body = new JSONObject();
                     for (String key : bodyMap.keySet()) {
                         // 支持变量参数中userId 和 token 以变量形式传入
-                        body.put(key, ApiRequestJsonFileParser.formatUidAndToken(bodyMap.get(key)));
+                        body.put(key, ApiRequestJsonFileParser.formatUidAndToken(String.valueOf(bodyMap.get(key))));
                     }
 
                     // 用例文件中的为请求模板
@@ -322,14 +322,15 @@ public class ApiRequestParser {
 
 
 //    public static void main(String[] args) throws IOException {
-//        String file = "NewTestSample.json";
+//        String file = "NewTask.json";
 //        List<ApiRequest> list = parser(file);
 //        System.out.println(list.size());
 //        for(ApiRequest apiRequest: list){
-//            System.out.println(">>>>>>>>");
-//            System.out.println("url: "+apiRequest.getUrl());
-//            System.out.println("headers: "+ apiRequest.getHeaders());
-//            System.out.println("body: "+apiRequest.getBody());
+//            String v="{\"queryStr\":\"330326197901104121\",\"uid\":187654321}";
+//            apiRequest.getBody().put("task_info",v);
+//            ApiResponse response = apiRequest.visit_url();
+//            System.out.println(response.BodyString);
 //        }
+//
 //    }
 }
